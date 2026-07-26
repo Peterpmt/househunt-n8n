@@ -14,7 +14,7 @@ RUN npm install -g n8n-nodes-panda-free-llm
 USER node
 
 # ============================================================
-# ENVIRONMENT DEFAULTS (Overridden by Render Dashboard)
+# ENVIRONMENT VARIABLES (Override in Render Dashboard)
 # ============================================================
 
 ENV N8N_COMMUNITY_PACKAGES_ALLOW_TOOL_USAGE=true
@@ -22,10 +22,11 @@ ENV N8N_COMMUNITY_PACKAGES=n8n-nodes-panda-free-llm
 ENV N8N_SECURE_COOKIE=false
 ENV N8N_USER_FOLDER=/home/node/.n8n
 
+# Expose the port
 EXPOSE 5678
 
-# Healthcheck (curl is already installed in the base image)
+# Healthcheck (curl is already available in the base image)
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
   CMD curl -f http://localhost:5678/healthz || exit 1
 
-CMD ["n8n", "start"]
+# NO CMD override – the base image's default (ENTRYPOINT tini -- n8n, CMD start) will be used.
